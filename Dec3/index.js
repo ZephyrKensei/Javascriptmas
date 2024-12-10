@@ -1,37 +1,67 @@
-/*
-You are going to build an app that challenges players to identify a Christmas Movie from some emoji 🍿 🎅 🎬. The players will have 3 guesses per movie.
+/*  Santas Emoji Hack!
 
-For example, the emoji 🌇 💣 👮 ✈️ ️🔫  represent the film “Die Hard”, which everyone knows is the best Christmas movie of all time.
+During Christmas, Santa wants to ban negative emojis, so when people
+use negative emoji shortcodes, he wants positive emojis to appear instead.
 
-In data.js you have an array of Christmas movies with emoji and text for aria labels.
-
-Your task is to build an app that meets these criteria:
-
-- The app should present the player with a set of emoji selected at random from the array in data.js. 
-
-- The player will input their guess.
-
-- If the player guesses correctly, the app should display a message saying "Correct!". Then, after a pause of 3 seconds, it should randomly select the next set of emoji clues and display them to the player.
-
-- If the player’s guess is incorrect, the app should display a message saying “Incorrect! You have 2 more guesses remaining.”
-
-- If the player fails to guess correctly on the next two attempts, the app should display a message saying, `The film was <Film Name Here>!`. After a pause of 3 seconds, it should randomly select a new set of emoji clues and display them to the player.
-
-- When all films in the array have been used, the player should see a message saying "That's all folks!".
-
-- Each film should only be used once. There should be no repetition. 
+In other words, :angry: should result in 🎁 instead of 😠.
 
 
-Stretch Goals
-
-- Use AI to decide if an answer is correct or incorrect. For example if the correct answer is "The Polar Express" but the player inputs "Polar Express" a straight comparison of the two strings will find that the player's answer was incorrect. AI could assess if there is sufficient similarity between the strings to judge it as correct. 
-
-- Improve the UX by disabling the form/button when the game is over and during the pause between questions.
 */
 
-import { films } from '/data.js'
+const hackedEmojis = {
+    ":angry:":            "🎁",   // 😠
+    ":thumbsdown:":       "👏",   // 👎  
+    ":man_facepalming:":  "🎅",   // 🤦‍♂️
+    ":cry:":              "‍😄",   // 😭
+    ":puke:":             "🤩"    // 🤮
+}
 
-// Some useful elements
-const guessInput = document.getElementById('guess-input')
-const messageContainer = document.getElementsByClassName('message-container')[0]
-const emojiCluesContainer = document.getElementsByClassName('emoji-clues-container')[0]
+
+/* 1. Write a function that checks if a lowercase word starts and 
+ends with a colon. If it does, check if it exists in the hackedEmojis object, 
+and replace it with the corresponding emoji. If not, return the original word.
+
+
+Example input: ":cry:"
+Example output: ‍😄
+
+*/ 
+function emojifyWord(word){
+    // Check if the word starts and ends with a colon
+    if (word.startsWith(':') && word.endsWith(':')) {
+        // Check if word exists in object
+        if(hackedEmojis[word]) {
+            return hackedEmojis[word]; //replace with emoji
+        }
+    }
+    return word;
+}
+
+console.log(emojifyWord("angry"));
+console.log(emojifyWord(":angry:"));
+
+
+/* 2. Write a function to find any emoji shortcodes in a phrase.
+Use your emojify function from the previous exercise!
+
+Example input: "Just read your article :thumbsdown:"
+Example output: "Just read your article 👏"
+*/ 
+
+function emojifyPhrase(phrase){
+    //split the phrase
+    const words = phrase.split(' ');
+    //map and replace shortcodes
+    const emojifiedWords = words.map(emojifyWord);
+    //combine the words back together
+    return emojifiedWords.join(' ');
+}
+
+
+console.log(emojifyPhrase("Those shoes :puke:"));
+
+
+// Stretch goal: don't just replace the shortcodes, but also 
+// any emojis are added directly to the text.
+
+
